@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SQL Injection: Authentication Bypass</title>
+<style>
+body{font-family:system-ui,Arial,sans-serif;max-width:950px;margin:35px auto;padding:0 18px;color:#172033}
+h1{margin-bottom:6px}.sub{color:#526078}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+section{border:1px solid #d7deea;border-radius:12px;padding:20px}label{display:block;margin-top:12px;font-weight:600}
+input{box-sizing:border-box;width:100%;padding:10px;border:1px solid #aab5c8;border-radius:7px;margin-top:5px}
+button{margin-top:15px;padding:10px 14px;border:0;border-radius:7px;cursor:pointer;background:#243b67;color:white}
+code{background:#f0f3f8;padding:2px 5px;border-radius:4px;overflow-wrap:anywhere}.note{background:#fff7dc;padding:14px;border-radius:8px}
+</style></head>
+<body>
+<h1>SQL Injection: Authentication Bypass</h1>
+<p class="sub">Local-only educational demo: compare a deliberately vulnerable login with a parameterized login.</p>
+<div class="note"><strong>Authorized testing only.</strong> This demo listens on localhost. Do not expose it to a network or use these techniques on real services.</div>
+<div class="grid">
+<section>
+<h2>1. Vulnerable login</h2>
+<p>The server concatenates your input into the SQL query. Try the demonstration payload below in the username field.</p>
+<form action="/login-vulnerable" method="post">
+<label>Username<input name="username" autocomplete="off" required></label>
+<label>Password<input name="password" type="password" autocomplete="off" required></label>
+<button type="submit">Test vulnerable login</button></form>
+</section>
+<section>
+<h2>2. Secured login</h2>
+<p>The server uses a parameterized query. The same payload should be treated as ordinary text and fail.</p>
+<form action="/login-secure" method="post">
+<label>Username<input name="username" autocomplete="off" required></label>
+<label>Password<input name="password" type="password" autocomplete="off" required></label>
+<button type="submit">Test secured login</button></form>
+</section>
+</div>
+<h2>Demonstration steps</h2>
+<ol>
+<li>First test a normal login: username <code>admin</code>, password <code>ClassroomDemo123!</code>.</li>
+<li>In the vulnerable form, enter this in the <strong>username</strong> field: <code>' OR '1'='1' -- </code>. Enter any password.</li>
+<li>Repeat the same input in the secured form. It should fail.</li>
+<li>Watch the terminal to compare the vulnerable SQL string with the secure query using placeholders.</li>
+</ol>
+<p><strong>Important:</strong> The password is stored in plaintext only to keep this small classroom example easy to inspect. Real applications must hash passwords (for example with Argon2id or bcrypt), use parameterized queries, rate-limit login attempts, and protect sessions.</p>
+</body></html>
